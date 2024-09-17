@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: 'dynamodb-table-data'
+    type: 'banthaherder-dynamodbtabledata-datasource'
+    access: proxy
+    isDefault: false
+    orgId: 1
+    version: 1
+    editable: true
+    jsonData:
+      tableName:
+    secureJsonData:
+      aws-access-key-id:
+      aws-secret-access-key:
+      aws-session-token:
