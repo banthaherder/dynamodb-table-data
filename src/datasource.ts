@@ -21,7 +21,8 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
   applyTemplateVariables(query: MyQuery, scopedVars: ScopedVars) {
     return {
       ...query,
-      // tableName: getTemplateSrv().replace(query.tableName, scopedVars),
+      tableName: getTemplateSrv().replace(query.tableName, scopedVars),
+      region: getTemplateSrv().replace(query.region, scopedVars),
     };
   }
 
