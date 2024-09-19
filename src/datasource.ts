@@ -3,12 +3,17 @@ import { MyQuery, MyDataSourceOptions } from './types';
 import { getTemplateSrv, DataSourceWithBackend } from '@grafana/runtime';
 
 export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> {
+  jsonData: MyDataSourceOptions;
+
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
+
+    this.jsonData = instanceSettings.jsonData;
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
     return {
+      region: this.jsonData.defaultRegion,
       tableName: '',
     };
   }
@@ -16,7 +21,7 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
   applyTemplateVariables(query: MyQuery, scopedVars: ScopedVars) {
     return {
       ...query,
-      tableName: getTemplateSrv().replace(query.tableName, scopedVars),
+      // tableName: getTemplateSrv().replace(query.tableName, scopedVars),
     };
   }
 

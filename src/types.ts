@@ -3,6 +3,7 @@ import { DataQuery } from '@grafana/schema';
 
 export interface MyQuery extends DataQuery {
   tableName?: string;
+  region?: string;
 }
 
 export interface DataSourceResponse {
@@ -13,7 +14,7 @@ export interface DataSourceResponse {
  * These are options configured for each DataSource instance
  */
 export interface MyDataSourceOptions extends DataSourceJsonData {
-  // tableName?: string;
+  defaultRegion?: string;
 }
 
 /**

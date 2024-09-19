@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { InlineField, SecretInput } from '@grafana/ui';
+import { Input, InlineField, SecretInput } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
 import { MyDataSourceOptions, MySecureJsonData } from '../types';
 
@@ -7,17 +7,18 @@ interface Props extends DataSourcePluginOptionsEditorProps<MyDataSourceOptions, 
 
 export function ConfigEditor(props: Props) {
   const { onOptionsChange, options } = props;
-  const { secureJsonFields, secureJsonData } = options;
+  const { secureJsonFields, secureJsonData, jsonData } = options;
+  const placeholderRegion = "us-west-2";
 
-  // const onPathChange = (event: ChangeEvent<HTMLInputElement>) => {
-  //   onOptionsChange({
-  //     ...options,
-  //     jsonData: {
-  //       ...jsonData,
-  //       path: event.target.value,
-  //     },
-  //   });
-  // };
+  const onDefaulRegionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onOptionsChange({
+      ...options,
+      jsonData: {
+        ...jsonData,
+        defaultRegion: event.target.value
+      },
+    });
+  };
 
   // Secure field (only sent to the backend)
   const onAccessKeyIdChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +27,11 @@ export function ConfigEditor(props: Props) {
       secureJsonData: {
         ...options.secureJsonData,
         accessKeyId: event.target.value,
+      },
+      // set defaultRegion if not set
+      jsonData: {
+        ...jsonData,
+        defaultRegion: jsonData.defaultRegion || placeholderRegion
       },
     });
   };
@@ -94,15 +100,15 @@ export function ConfigEditor(props: Props) {
 
   return (
     <>
-      {/* <InlineField label="Table Name" labelWidth={25} interactive tooltip={'Json field returned to frontend'}>
+      <InlineField label="AWS Default Region" labelWidth={25} interactive tooltip={'Enter the default region to use'}>
         <Input
           id="config-editor-path"
-          onChange={onPathChange}
-          value={jsonData.tableName}
-          placeholder="Enter the path, e.g. /api/v1"
-          width={40}
+          onChange={onDefaulRegionChange}
+          value={jsonData.defaultRegion}
+          placeholder={placeholderRegion}
+          width={16}
         />
-      </InlineField> */}
+      </InlineField>
       <InlineField label="AWS Access Key ID" labelWidth={25} interactive tooltip={'Secure json field (backend only)'}>
         <SecretInput
           required

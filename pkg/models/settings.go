@@ -8,7 +8,7 @@ import (
 )
 
 type PluginSettings struct {
-	// Region  string                `json:"region"`
+	Region  string                `json:"region"`
 	Secrets *SecretPluginSettings `json:"-"`
 }
 
