@@ -200,24 +200,24 @@ func (d *Datasource) query(_ context.Context, pCtx backend.PluginContext, query 
 	// Load plugin settings
 	settings, err := models.LoadPluginSettings(*pCtx.DataSourceInstanceSettings)
 	if err != nil {
-		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to load plugin settings: %w", err.Error()))
+		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to load plugin settings: %s", err.Error()))
 	}
 
 	// Create AWS session
 	awsSession, err := createAWSSession(settings)
 	if err != nil {
-		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to create AWS session: %w", err.Error()))
+		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to create AWS session: %s", err.Error()))
 	}
 
 	// Create DynamoDB client
 	dynamoClient := dynamodb.New(awsSession)
 
 	if err := json.Unmarshal(query.JSON, &qm); err != nil {
-		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to unmarshal query JSON: %w", err.Error()))
+		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to unmarshal query JSON: %s", err.Error()))
 	}
 
 	if qm.TableName == "" {
-		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("tableName is required in the query", err.Error()))
+		return backend.ErrDataResponse(backend.StatusBadRequest, "tableName is required in the query")
 	}
 
 	// Perform DynamoDB scan with the table name from the query
@@ -227,7 +227,7 @@ func (d *Datasource) query(_ context.Context, pCtx backend.PluginContext, query 
 
 	scanOutput, err := dynamoClient.Scan(scanInput)
 	if err != nil {
-		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to scan DynamoDB table %s: %w", qm.TableName, err.Error()))
+		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("failed to scan DynamoDB table %s: %s", qm.TableName, err.Error()))
 	}
 
 	fields := ExtractFields(scanOutput.Items)
